@@ -3253,12 +3253,6 @@ ccache(int argc, char *argv[])
 		failed();
 	}
 
-	if (conf->use_dependency_files && conf->sloppiness & SLOPPY_NO_SYSTEM_HEADERS) {
-		cc_log("Can't use sloppiness 'no_system_headers' with dependency files");
-		stats_update(STATS_UNSUPPORTED);
-		failed();
-	}
-
 	setup_uncached_err();
 
 	cc_log_argv("Command line: ", argv);
