@@ -810,17 +810,13 @@ process_preprocessed_file(struct mdfour *hash, const char *path)
 				}
 				r++;
 			}
-			// when using dependency file don't parse preprocessed output for included headers
-			// we will use headers from dependency file instead
-			if(!conf->use_dependency_file && generating_dependencies) {
-				// p and q span the include file path.
-				char *inc_path = x_strndup(p, q - p);
-				if (!has_absolute_include_headers) {
-					has_absolute_include_headers = is_absolute_path(inc_path);
-				}
-				inc_path = make_relative_path(inc_path);
-				remember_include_file(inc_path, hash, system);
+			// p and q span the include file path.
+			char *inc_path = x_strndup(p, q - p);
+			if (!has_absolute_include_headers) {
+				has_absolute_include_headers = is_absolute_path(inc_path);
 			}
+			inc_path = make_relative_path(inc_path);
+			remember_include_file(inc_path, hash, system);
 			p = q;
 		} else {
 			q++;
@@ -837,10 +833,6 @@ process_preprocessed_file(struct mdfour *hash, const char *path)
 		path = make_relative_path(path);
 		hash_string(hash, path);
 		remember_include_file(path, hash, false);
-	}
-
-	if (conf->use_dependency_file && generating_dependencies) {
-		cc_log("Dependency file: %s", cached_dep);
 	}
 
 	return true;
