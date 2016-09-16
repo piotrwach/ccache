@@ -80,7 +80,6 @@ TEST(conf_create)
 	CHECK_STR_EQ("", conf->temporary_dir);
 	CHECK_INT_EQ(UINT_MAX, conf->umask);
 	CHECK(!conf->unify);
-	CHECK(!conf->use_dependency_file);
 	conf_free(conf);
 }
 
@@ -131,8 +130,7 @@ TEST(conf_read_valid_config)
 	  "stats = false\n"
 	  "temporary_dir = ${USER}_foo\n"
 	  "umask = 777\n"
-	  "unify = true\n"
-	  "use_dependency_file = true"); // Note: no newline.
+	  "unify = true"); // Note: no newline.
 	CHECK(conf_read(conf, "ccache.conf", &errmsg));
 	CHECK(!errmsg);
 
@@ -175,7 +173,6 @@ TEST(conf_read_valid_config)
 	CHECK_STR_EQ_FREE1(format("%s_foo", user), conf->temporary_dir);
 	CHECK_INT_EQ(0777, conf->umask);
 	CHECK(conf->unify);
-	CHECK(conf->use_dependency_file);
 
 	conf_free(conf);
 }
@@ -401,7 +398,6 @@ TEST(conf_print_items)
 		"td",
 		022,
 		true,
-		true,
 		NULL
 	};
 	size_t n = 0;
@@ -452,7 +448,6 @@ TEST(conf_print_items)
 	CHECK_STR_EQ("temporary_dir = td", received_conf_items[n++].descr);
 	CHECK_STR_EQ("umask = 022", received_conf_items[n++].descr);
 	CHECK_STR_EQ("unify = true", received_conf_items[n++].descr);
-	CHECK_STR_EQ("use_dependency_file = true", received_conf_items[n++].descr);
 
 	for (i = 0; i < N_CONFIG_ITEMS; ++i) {
 #ifndef __MINGW32__
